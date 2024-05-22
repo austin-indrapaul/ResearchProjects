@@ -1,0 +1,37 @@
+receive file input path
+display few rows of data
+confirm is this the right data to process
+receive file info - is header present
+do you want to add headers if not present
+enter conditions to remove the row - input<0, input=NULL (for exceptions skip the data - log file)
+exception occurred do you want to proceed further (see log file at path)
+enter conditions to replace the data in row - input<0, input=NULL/none/na (for exceptions skip the data - log file)
+exception occurred do you want to proceed further (see log file at path)
+receive file format required for output
+receive file output path
+
+||====================================================||
+||AIM: function based data parsing (transform/remove) ||
+||====================================================||
+
+Gold rate - Price (24 karat per 10 grams)
+GDP per capita (constant 2015 US$)
+Inflation, consumer prices (annual %) - Inflation
+Oil price - US dollar / U.S. Crude Oil First Purchase Price (Dollars per Barrel)
+
+input parameters
+================
+Date (2003-FEB TO 2023-DEC)
+population (in millions)
+Gold price	(troy/oz)
+Oil price	(Barrel)
+S&P index	(S&P500 index)
+GNI (Gross national income)
+Inflation (percent/rate)
+
+
+
+output
+======
+Realestate index (DOW JONES REALESTATE INDEX)
+IT index (NASDAQ100 INDEX)
