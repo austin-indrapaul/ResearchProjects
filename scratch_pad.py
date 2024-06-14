@@ -52,7 +52,7 @@ def my_custom_function():
         return f"Error: {response.status_code}"
 
 if __name__ == "__main__":
-    print(my_custom_function())
+    print(my_custom_function()['news'][0]['title'])
 
 
     # response = Completion.create(

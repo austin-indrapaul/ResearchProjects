@@ -10,7 +10,7 @@ def getYearVersusPopulationInfo():
     info = GraphComponent()
     info.setImagePath(image_path)
     info.setDescription("")
-    info.setExternalLink("")
+    info.setExternalLink("https://data.worldbank.org/indicator/SP.POP.TOTL?locations=US")
     return info
 
 def getYearVersusInflationInfo():
@@ -18,7 +18,7 @@ def getYearVersusInflationInfo():
     info = GraphComponent()
     info.setImagePath(image_path)
     info.setDescription("")
-    info.setExternalLink("")
+    info.setExternalLink("https://www.usinflationcalculator.com/inflation/current-inflation-rates/")
     return info
 
 def getYearVersusGoldPriceInfo():
@@ -26,7 +26,7 @@ def getYearVersusGoldPriceInfo():
     info = GraphComponent()
     info.setImagePath(image_path)
     info.setDescription("")
-    info.setExternalLink("")
+    info.setExternalLink("https://in.investing.com/commodities/gold-historical-data?interval_sec=monthly")
     return info
 
 def getYearVersusOilPriceInfo():
@@ -43,7 +43,7 @@ def getYearVersusS_PindexInfo():
     info = GraphComponent()
     info.setImagePath(image_path)
     info.setDescription("")
-    info.setExternalLink("")
+    info.setExternalLink("https://in.investing.com/indices/us-spx-500-historical-data")
     return info
 
 
@@ -52,7 +52,7 @@ def getYearVersusGNIInfo():
     info = GraphComponent()
     info.setImagePath(image_path)
     info.setDescription("")
-    info.setExternalLink("")
+    info.setExternalLink("https://data.worldbank.org/indicator/NY.GNP.PCAP.CD")
     return info
 
 
@@ -61,7 +61,7 @@ def getYearVersusRealestateindexInfo():
     info = GraphComponent()
     info.setImagePath(image_path)
     info.setDescription("")
-    info.setExternalLink("")
+    info.setExternalLink("https://in.investing.com/indices/dj-real-estate-historical-data")
     return info
 
 def getYearVersusITindexInfo():
@@ -69,7 +69,7 @@ def getYearVersusITindexInfo():
     info = GraphComponent()
     info.setImagePath(image_path)
     info.setDescription("")
-    info.setExternalLink("")
+    info.setExternalLink("https://in.investing.com/indices/nasdaq-composite-historical-data")
     return info
 
 

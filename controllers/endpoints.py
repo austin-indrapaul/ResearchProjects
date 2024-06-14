@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from analysis import dataanalyzer
 from analysis.dataanalyzer import *
 from models.GraphComponent import *
+from analysis.getLatestNews import *
 
 function = Blueprint('function',__name__)
 
@@ -44,3 +45,11 @@ def graph_component(param):
     else:
         print("Graph type does not exist")
         return None;
+
+@function.route('/fetch-news', methods=['GET'])
+def getNews():
+    type = request.args.get('type', default="", type=str)
+    print(f"News type: {type}")
+    result = get_latest_news(type)
+    return jsonify(result['news'][0]['text'])
+

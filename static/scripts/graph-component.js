@@ -42,11 +42,32 @@ function returnResult(results, element){
                     className="btn btn-warning"
                   >visit external link &nbsp;&nbsp;<i className="bi bi-box-arrow-up-right"></i>
                   </a>
-                )}
+                )}<br/>
+                <br/>
+                <button
+                  data-category={element.getAttribute("id")}
+                  className="btn btn-info"
+                  onClick={getLatestNewsFunc}
+                   data-bs-toggle="modal" data-bs-target="#my-modal"
+                >
+                  Get latest news &nbsp;&nbsp;<i className="bi bi-newspaper"></i>
+                </button>
                 </p>
             </div>
         </div>
       );
+}
+
+function getLatestNewsFunc(event){
+    return new Promise((resolve, reject) => {
+        loadTheDataInModal(event.target.getAttribute("data-category")).then(
+        data => {
+            console.log(data);
+        }).catch(error => {
+            reject(error)
+            console.error(error);
+          });
+      });
 }
 
 function getResults(type){

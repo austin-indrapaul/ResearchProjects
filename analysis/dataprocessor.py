@@ -6,9 +6,9 @@ from sklearn.linear_model import LinearRegression
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
-# df = pd.read_csv("./static/datasets/dataset.csv")
+df = pd.read_csv("./static/datasets/dataset.csv")
 
-df = pd.read_csv("../static/datasets/dataset.csv")
+# df = pd.read_csv("../static/datasets/dataset.csv")
 
 global model_already_generated
 model_already_generated = False

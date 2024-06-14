@@ -18,25 +18,25 @@ function getAnalyzerComponent(){
         <table class="parameter">
         <tr>
             <td><label for="gold-price">Gold Price ($/troy oz): </label></td>
-            <td><input type="number" name="gold-price" defaultValue={0}/></td>
+            <td><input type="number" name="gold-price" defaultValue={0} step="any"/></td>
         </tr>
         </table>
         <table class="parameter">
         <tr>
             <td><label for="inflation">Inflation (percent/rate): </label></td>
-            <td><input type="number" name="inflation" defaultValue={0}/></td>
+            <td><input type="number" name="inflation" defaultValue={0} step="any"/></td>
         </tr>
         </table>
         <table class="parameter">
         <tr>
             <td><label for="s_p-index">S&P Index (points): </label></td>
-            <td><input type="number" name="s_p-index" defaultValue={0}/></td>
+            <td><input type="number" name="s_p-index" defaultValue={0} step="any"/></td>
         </tr>
         </table>
         <table class="parameter">
         <tr>
             <td><label for="gni">GNI (units): </label></td>
-            <td><input type="number" name="gni" defaultValue={0}/></td>
+            <td><input type="number" name="gni" defaultValue={0} step="any"/></td>
         </tr>
         </table>
         {/*
