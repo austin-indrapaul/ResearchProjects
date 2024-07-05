@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib
 import random
 from sklearn.linear_model import LinearRegression
+import seaborn as sns
 
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
@@ -28,9 +29,13 @@ def generatePredictionModel():
     global model_already_generated
     model_already_generated = True
 
+def regenerateModel():
+    global df
+    df = pd.read_csv("./static/datasets/dataset.csv")
+    generatePredictionModel()
 
-def predictTheValue(population, goldPrice, oilPrice, S_Pindex, GNI, Inflation, regenerateModel=False):
-    if not (model_already_generated) or regenerateModel:
+def predictTheValue(population, goldPrice, oilPrice, S_Pindex, GNI, Inflation):
+    if not (model_already_generated):
         generatePredictionModel()
 
     new_X = [[population, goldPrice, oilPrice, S_Pindex, GNI, Inflation]]
@@ -75,28 +80,55 @@ def random_color():
     return f"#{r:02x}{g:02x}{b:02x}";
 
 def getYearVersusGraph(param, url_prefix="."):
+    images_path = []
+    images_path.append(getYearVersusLineGraph(param, url_prefix))
+    images_path.append(getYearVersusBarGraph(param, url_prefix))
+    images_path.append(getYearVersusHeatGraph(param, url_prefix))
+    return images_path
+
+def getYearVersusLineGraph(param, url_prefix="."):
     plt.rcdefaults()
     plt.clf()
-    dates = pd.to_datetime(df["Date"], format='%m/%d/%Y')
-    plt.plot(dates, df[param], color=random_color())
-    plt.tight_layout()
-    filename = url_prefix + "/static/results/graphs/"+param+".jpg";
+    df["Date"] = pd.to_datetime(df["Date"], format='%m/%d/%Y')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.lineplot(x=df["Date"], y=df[param], color=random_color(), ax=ax)
+    plt.subplots_adjust(left=0.15, right=0.9, bottom=0.15, top=0.85)
+    plt.title("Line Graph of "+param)
+    filename = url_prefix + "/static/results/graphs/line-" + param + ".jpg"
     plt.savefig(filename, dpi=500)
     return filename
 
-def getYearVersusUrbanAndRuralPopGraph(url_prefix="."):
+def getYearVersusBarGraph(param, url_prefix="."):
     plt.rcdefaults()
     plt.clf()
-    plt.xticks(df["Date"], rotation=90, fontsize=5)
-    plt.yticks(fontsize=5)
-    plt.gca().xaxis.set_tick_params()
-    plt.gca().yaxis.set_tick_params()
-    plt.bar(df["Date"] - 0.2, df["UrbanPopulation"], 0.2, color="blue")
-    plt.bar(df["Date"] + 0.2, df["RuralPopulation"], 0.2, color="orange")
-    plt.plot(df["Date"], df["RuralPopulation"], color="black")
-    plt.plot(df["Date"], df["UrbanPopulation"], color="black")
-    plt.tight_layout()
-    filename = url_prefix + "/static/results/graphs/urbanRuralPopGraph.jpg";
+    df["Date"] = pd.to_datetime(df["Date"], format='%m/%d/%Y')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.barplot(x=df["Date"], y=df[param], data=df, color=random_color(), ax=ax)
+
+    # Skip every n-th tick label
+    n = 5  # Adjust the value of n as needed
+    labels = ax.get_xticklabels()
+    for i, label in enumerate(labels):
+        if i % n != 0:
+            label.set_visible(False)
+
+    ax.set_xticks(ax.get_xticks()[::n])
+    ax.set_xticklabels(df["Date"].dt.year[::n].astype(str), rotation=90, ha='right')
+
+    plt.subplots_adjust(left=0.15, right=0.9, bottom=0.15, top=0.85)
+    plt.title("Bar Graph of "+param)
+    filename = url_prefix + "/static/results/graphs/bar-" + param + ".jpg"
+    plt.savefig(filename, dpi=500)
+    return filename
+
+def getYearVersusHeatGraph(param, url_prefix="."):
+    plt.rcdefaults()
+    plt.clf()
+    data_without_timestamp = df.drop(columns=['Date'])
+    sns.heatmap(data=data_without_timestamp.corr())
+    plt.subplots_adjust(left=0.2, right=0.92, bottom=0.25, top=0.9)
+    plt.title("Heat Map")
+    filename = url_prefix + "/static/results/graphs/heat-" + param + ".jpg"
     plt.savefig(filename, dpi=500)
     return filename
 

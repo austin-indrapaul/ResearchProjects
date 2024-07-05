@@ -51,5 +51,10 @@ def getNews():
     type = request.args.get('type', default="", type=str)
     print(f"News type: {type}")
     result = get_latest_news(type)
-    return jsonify(result['news'][0]['text'])
+    try:
+        return jsonify(result['news'][0]['text'])
+    except Exception as e:
+        print(e)
+        return jsonify("Error occured: Network issue / unable to fetch news")
+
 

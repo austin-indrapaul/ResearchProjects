@@ -68,29 +68,12 @@ function addAnalyzer(){
     ReactDOM.render(temp, newElement);
 
     document.querySelectorAll('.analyzer-form').forEach(form=>
-    {form.addEventListener('submit', event =>
     {
-        event.preventDefault()
-        submitForm()
-    }
-    )});
+        form.addEventListener('submit', event =>
+            {
+                event.preventDefault()
+                submitForm()
+            }
+        )
+    });
 }
-
-//function result(element) {
-//    return new Promise((resolve, reject) => {
-//           let results;
-//           getResults(element.getAttribute('id'))
-//          .then(data => {
-//            console.log(data);
-//            results = data;
-//            console.log("resultset: "+results);
-//            let resultSet = returnResult(results, element)
-//            resolve(resultSet)
-//            return resultSet;
-//          })
-//          .catch(error => {
-//            reject(error)
-//            console.error(error);
-//          });
-//      });
-//}

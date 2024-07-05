@@ -79,7 +79,7 @@ body, html, #outer-container, #left-side, #right-side{
 .graph-component{
     border: 0.1rem solid black;
     padding: 0.5rem 1.6rem;
-    margin: 0.5rem 1.6rem;
+    margin: 0.5rem 3rem;
     border-radius: 1.5rem;
 }
 
@@ -96,14 +96,15 @@ body, html, #outer-container, #left-side, #right-side{
 .graph-component-desc{
     flex:1;
     display:block;
-    padding: 1rem;
-    margin: 1rem;
+    margin-left: 20px;
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 .analyzer-component{
     border: 0.1rem solid black;
     padding: 0.5rem 1.6rem;
-    margin: 0.5rem 1.6rem;
+    margin: 0.5rem 3rem;
     border-radius: 1.5rem;
 }
 .analyzer-form{
@@ -137,4 +138,14 @@ min-width:150px;
 
 p.result{
   max-width:650px;
+}
+
+.carousel-comp{
+  width:450px;
+}
+
+#table-editor-icon{
+    position:fixed;
+    top: 5px;
+    right: 10px;
 }
