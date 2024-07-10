@@ -149,3 +149,19 @@ p.result{
     top: 5px;
     right: 10px;
 }
+
+#loader-component{
+    position:fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: grey;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.8;
+}

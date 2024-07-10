@@ -33,7 +33,7 @@ function returnResult(results, element){
             <h2 style={{"text-decoration": "underline"}}>{element.innerText}</h2>
             <div className="graph-component-inner">
               <div className="carousel-comp">
-                <div id={"carousel-comp"+counter} class="carousel  carousel-dark slide" data-bs-ride="carousel">
+                <div id={"carousel-comp"+counter} class="carousel  carousel-dark slide" data-bs-ride="carousel" data-bs-interval="3000">
                   <div className="carousel-inner">
                      {
                      results["image_path"].map((data, index) => (
@@ -126,7 +126,7 @@ function getResults(type){
 
 function addResult(element){
     counter = counter + 1;
-    console.log(counter)
+    document.getElementById("loader-component").style.display = "flex";
     result(element)
       .then(temp => {
         const existingElement = document.querySelector("#right-side");
@@ -134,6 +134,12 @@ function addResult(element){
         newElement.setAttribute("class","graph-component")
         existingElement.appendChild(newElement);
         ReactDOM.render(temp, newElement);
+        document.getElementById("loader-component").style.display = "none";
+        //existingElement.scrollTop = existingElement.scrollHeight;
+        existingElement.scrollTo({
+          top: existingElement.scrollHeight,
+          behavior: "smooth"
+        });
     }).catch(error => {
         console.error(error);
       });
