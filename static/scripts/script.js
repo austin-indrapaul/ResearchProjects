@@ -5,3 +5,4 @@ setTimeout(function() {
 $(document).ready(function() {
     $("#loader-component").hide();
 });
+

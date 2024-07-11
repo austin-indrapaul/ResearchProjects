@@ -171,3 +171,14 @@ p.result{
         max-width:1440px!Important;
     }
 }
+
+.data-table-input{
+    width: 9rem;
+}
+
+#modalTableEditor .btn-close{
+    margin:0!important;
+}
+#modalTableEditor .modal-header{
+    justify-content: space-between!important;
+}
