@@ -3,6 +3,8 @@ from analysis import dataanalyzer
 from analysis.dataanalyzer import *
 from models.GraphComponent import *
 from analysis.getLatestNews import *
+from analysis.dataprocessor import getDataTable
+import json
 
 function = Blueprint('function',__name__)
 
@@ -57,4 +59,11 @@ def getNews():
         print(e)
         return jsonify("Error occured: Network issue / unable to fetch news")
 
-
+@function.route('/fetch-data-table')
+def fetchDataTable():
+    result = getDataTable()
+    json_result = result.to_json(orient='records')
+    json_result = json_result.replace('\/', '/')
+    print(json_result)
+    json_result = json.dumps(json_result)
+    return json_result

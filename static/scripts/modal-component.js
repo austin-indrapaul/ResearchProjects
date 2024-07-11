@@ -73,7 +73,6 @@ function getNewsResults(type){
 }
 
 function TheModal(){
-    let results = ["Title of the model","lorem ipsum"];
       return (
        <div className="modal fade" id="my-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div className="modal-dialog  modal-xl modal-dialog-scrollable">

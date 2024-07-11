@@ -132,6 +132,8 @@ def getYearVersusHeatGraph(param, url_prefix="."):
     plt.savefig(filename, dpi=500)
     return filename
 
+def getDataTable():
+    return df
 
 if __name__ == '__main__':
     generatePredictionModel()

@@ -148,6 +148,7 @@ p.result{
     position:fixed;
     top: 5px;
     right: 10px;
+    cursor: pointer;
 }
 
 #loader-component{
@@ -164,4 +165,9 @@ p.result{
     justify-content: center;
     align-items: center;
     opacity: 0.8;
+}
+@media (min-width: 1200px) {
+    #modalTableEditor-xl{
+        max-width:1440px!Important;
+    }
 }
