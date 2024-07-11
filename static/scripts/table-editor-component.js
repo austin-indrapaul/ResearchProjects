@@ -1,5 +1,6 @@
 function show_table_editor(){
     document.getElementById("modalTableEditor-body").innerHTML= "<img src=\"./static/images/loader.gif\"></img>";
+    document.getElementById("modalTableEditor-controls").innerHTML = "";
     return new Promise((resolve, reject) => {
         fetch('/fetch-data-table')
         .then(response => {
@@ -12,7 +13,7 @@ function show_table_editor(){
             console.log("Data received: "+data)
             var jsonData = JSON.parse(data);
             console.log(jsonData);
-            populateTheData(jsonData)
+            populateTheData(jsonData);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -22,7 +23,7 @@ function show_table_editor(){
 }
 let parameters = 0;
 function populateTheData(jsonData) {
-    console.table(jsonData);
+    //console.table(jsonData);
     let form = document.createElement('form');
     let table = document.createElement('table');
     table.setAttribute('id', 'table-editor');
@@ -112,7 +113,9 @@ function ModalTableEditor(){
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="modalTableEditor-title">Data Editor</h5>
-                <p className="modal-controls modal-title" id="modalTableEditor-controls"></p>
+                <p className="modal-controls modal-title" id="modalTableEditor-controls">
+
+                </p>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div className="modal-body" id="modalTableEditor-body">
