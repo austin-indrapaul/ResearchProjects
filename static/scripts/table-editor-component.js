@@ -1,8 +1,8 @@
-function show_table_editor(){
+function show_table_editor(type){
     document.getElementById("modalTableEditor-body").innerHTML= "<img src=\"./static/images/loader.gif\"></img>";
     document.getElementById("modalTableEditor-controls").innerHTML = "";
     return new Promise((resolve, reject) => {
-        fetch('/fetch-data-table')
+        fetch('/fetch-data-table/'+type)
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -23,6 +23,7 @@ function show_table_editor(){
 }
 let parameters = 0;
 function populateTheData(jsonData) {
+    parameters = 0;
     //console.table(jsonData);
     let form = document.createElement('form');
     let table = document.createElement('table');
@@ -63,21 +64,88 @@ function populateTheData(jsonData) {
 
     let span1 = document.createElement('span');
     span1.innerHTML =
-      "<button type=\"button\" class=\"btn btn-info delete-btn\" onclick=\"addRecord(event);\">Add new record <i class=\"bi bi-plus-circle-fill\"></i></button>";
+      "<button type=\"button\" class=\"btn btn-info\" onclick=\"addRecord(event);\">Add new record <i class=\"bi bi-plus-circle-fill\"></i></button>";
     let header = document.getElementById("modalTableEditor-controls");
     header.appendChild(span1);
-    let space = document.createElement('span');
-    space.innerHTML = " &nbsp; "
-    header.appendChild(space);
+    let space1 = document.createElement('span');
+    space1.innerHTML = " &nbsp; "
+    header.appendChild(space1);
     let span2 = document.createElement('span');
     span2.innerHTML =
-      "<button type=\"button\" class=\"btn btn-success delete-btn\" onclick=\"addRecord(event);\">Save & Regenerate model <i class=\"bi bi-arrow-clockwise\"></i></button>";
+      "<button type=\"button\" class=\"btn btn-success\" onclick=\"save_regenerate(event);\">Save & Regenerate model <i class=\"bi bi-arrow-clockwise\"></i></button>";
     header.appendChild(span2);
+    let space2 = document.createElement('span');
+    space2.innerHTML = " &nbsp; "
+    header.appendChild(space2);
+    let span3 = document.createElement('span');
+    span3.innerHTML =
+      "<button type=\"button\" class=\"btn btn-warning\" onclick=\"show_table_editor('original');\">Load original dataset <i class=\"bi bi-database-fill-down\"></i></button>";
+    header.appendChild(span3);
+    let space3 = document.createElement('span');
+    space3.innerHTML = " &nbsp; "
+    header.appendChild(space3);
+    let span4 = document.createElement('span');
+    span4.innerHTML =
+      "<button type=\"button\" class=\"btn btn-primary\" onclick=\"show_table_editor('current');\">Load current dataset <i class=\"bi bi-database-fill-down\"></i></button>";
+    header.appendChild(span4);
 }
 
 function deleteRecord(event){
     let row = event.target.closest('tr');
     row.remove();
+}
+
+function save_regenerate(event){
+    return new Promise((resolve, reject) => {
+        fetch('/save-regenerate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(get_table_data()),
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          } else{
+            console.log("Data saved successfully.")
+            document.getElementById("modalTableEditor-body").innerHTML= "<p class=\"alert alert-success\" role=\"alert\">Data saved successfully and model is regenerated.</p>";
+          }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            reject(error)
+        });
+      });
+}
+
+function get_table_data(){
+  const table = document.getElementById('table-editor');
+  document.getElementById("modalTableEditor-body").innerHTML= "<img src=\"./static/images/loader.gif\"></img>";
+  document.getElementById("modalTableEditor-controls").innerHTML = "";
+  const rows = table.getElementsByTagName('tr');
+  console.log(table)
+  let csvString = '';
+
+
+  for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        const rowData = [];
+        if (i!=0){
+            for (let j = 0; j < cells.length-1; j++) {
+              rowData.push(cells[j].querySelector('input').value);
+            }
+            csvString += rowData.join(',') + '\n';
+        } else {
+            const hcells = rows[i].getElementsByTagName('th');
+            for (let j = 0; j < hcells.length; j++) {
+              rowData.push(hcells[j].innerText);
+            }
+            csvString += rowData.join(',') + '\n';
+        }
+  }
+
+  return csvString;
 }
 
 function addRecord(event){

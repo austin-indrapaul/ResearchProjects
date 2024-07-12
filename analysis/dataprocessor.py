@@ -7,16 +7,17 @@ import seaborn as sns
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
+global df
 df = pd.read_csv("./static/datasets/dataset.csv")
-
-# df = pd.read_csv("../static/datasets/dataset.csv")
 
 global model_already_generated
 model_already_generated = False
 
 
 # Date,population,Gold price,Oil price,S&P index,GNI,Inflation,Realestate index,IT index
-def generatePredictionModel():
+def generatePredictionModel(filepath = "./static/datasets/dataset.csv"):
+    global df
+    df = pd.read_csv(cleanFile(filepath))
     X = [[x1, x2, x3, x4, x5, x6] for x1, x2, x3, x4, x5, x6 in
          zip(df["population"], df["Gold price"], df["Oil price"], df["S&P index"],
              df["GNI"], df["Inflation"])]
@@ -29,10 +30,19 @@ def generatePredictionModel():
     global model_already_generated
     model_already_generated = True
 
+def cleanFile(filepath):
+    with open(filepath, 'r') as input_file, open('./static/datasets/dataset-process.csv', 'w', newline='') as output_file:
+        lines = input_file.readlines()
+        non_blank_lines = [line for line in lines if line.strip()]
+        while non_blank_lines and not non_blank_lines[-1].strip():
+            non_blank_lines.pop()
+        if non_blank_lines:
+            non_blank_lines[-1] = non_blank_lines[-1].rstrip('\n')
+        output_file.write(''.join(non_blank_lines))
+    return "./static/datasets/dataset-process.csv"
+
 def regenerateModel():
-    global df
-    df = pd.read_csv("./static/datasets/dataset.csv")
-    generatePredictionModel()
+    generatePredictionModel("./static/datasets/dataset-temp.csv")
 
 def predictTheValue(population, goldPrice, oilPrice, S_Pindex, GNI, Inflation):
     if not (model_already_generated):
@@ -132,8 +142,19 @@ def getYearVersusHeatGraph(param, url_prefix="."):
     plt.savefig(filename, dpi=500)
     return filename
 
-def getDataTable():
+def getCurrentDataTable():
     return df
+
+def getOriginalDataTable():
+    with open('./static/datasets/dataset.csv', 'r') as input_file, open('./static/datasets/dataset-temp.csv', 'w', newline='') as output_file:
+        lines = input_file.readlines()
+        non_blank_lines = [line for line in lines if line.strip()]
+        while non_blank_lines and not non_blank_lines[-1].strip():
+            non_blank_lines.pop()
+        if non_blank_lines:
+            non_blank_lines[-1] = non_blank_lines[-1].rstrip('\n')
+        output_file.write(''.join(non_blank_lines))
+    return pd.read_csv("./static/datasets/dataset-temp.csv")
 
 if __name__ == '__main__':
     generatePredictionModel()

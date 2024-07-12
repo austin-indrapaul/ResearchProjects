@@ -111,3 +111,15 @@ def getPredictedValue(formData):
     GNI = float(formData['gni'])
     predicted_result = predictTheValue(population, goldPrice, oilPrice, S_Pindex, GNI, Inflation)
     return str(predicted_result)
+
+def getDataTable(param):
+    if param == "current":
+        return getCurrentDataTable()
+    elif param == "original":
+        return getOriginalDataTable()
+
+def save_and_regenerate(data):
+    with open("./static/datasets/dataset-temp.csv", "w") as file:
+        file.write(data)
+
+    regenerateModel()

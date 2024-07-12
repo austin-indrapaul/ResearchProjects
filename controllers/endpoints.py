@@ -5,13 +5,12 @@ from analysis import dataanalyzer
 from analysis.dataanalyzer import *
 from models.GraphComponent import *
 from analysis.getLatestNews import *
-from analysis.dataprocessor import getDataTable
 import json
 
 function = Blueprint('function',__name__)
 
 @function.route('/predict', methods=['POST'])
-def contact():
+def predict_result():
     json_data = request.get_json()
     form_data = dict(json_data)
     print(form_data)
@@ -61,11 +60,18 @@ def getNews():
         print(e)
         return jsonify("Error occured: Network issue / unable to fetch news")
 
-@function.route('/fetch-data-table')
-def fetchDataTable():
-    result = getDataTable()
+@function.route('/fetch-data-table/<param>')
+def fetchDataTable(param):
+    result = getDataTable(param)
     json_result = result.to_json(orient='records')
     json_result = json_result.replace('\/', '/')
     print(json_result)
     json_result = json.dumps(json_result)
+    time.sleep(2)
     return json_result
+
+@function.route('/save-regenerate', methods=['POST'])
+def save_and_regenerate():
+    data = request.get_json()
+    dataanalyzer.save_and_regenerate(data)
+    return jsonify("")

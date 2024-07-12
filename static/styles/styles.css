@@ -159,12 +159,12 @@ p.result{
     right: 0px;
     width: 100%;
     height: 100%;
-    background-color: grey;
+    background-color: whitesmoke;
     z-index: 100;
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0.8;
+    opacity: 0.92;
 }
 @media (min-width: 1200px) {
     #modalTableEditor-xl{
