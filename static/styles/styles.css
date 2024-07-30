@@ -35,7 +35,7 @@ body, html, #outer-container, #left-side, #right-side{
 .insights{
     font-size:1.6rem;
     padding: 0.8rem 1.6rem;
-    background-color:pink;
+    background-color:#ff9bac;
     cursor: pointer;
 }
 .insights:hover{

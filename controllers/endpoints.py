@@ -65,13 +65,12 @@ def fetchDataTable(param):
     result = getDataTable(param)
     json_result = result.to_json(orient='records')
     json_result = json_result.replace('\/', '/')
-    print(json_result)
     json_result = json.dumps(json_result)
-    time.sleep(2)
+    #time.sleep(2)
     return json_result
 
-@function.route('/save-regenerate', methods=['POST'])
-def save_and_regenerate():
+@function.route('/save-regenerate/<algorithm>', methods=['POST'])
+def save_and_regenerate(algorithm):
     data = request.get_json()
-    dataanalyzer.save_and_regenerate(data)
-    return jsonify("")
+    model_score = dataanalyzer.save_and_regenerate(data, algorithm)
+    return jsonify(model_score)

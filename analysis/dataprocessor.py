@@ -1,21 +1,25 @@
 import pandas as pd
 import matplotlib
 import random
+import os
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 import seaborn as sns
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.tree import DecisionTreeRegressor
 
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
 global df
-df = pd.read_csv("./static/datasets/dataset.csv")
+df = None
 
 global model_already_generated
 model_already_generated = False
 
 
 # Date,population,Gold price,Oil price,S&P index,GNI,Inflation,Realestate index,IT index
-def generatePredictionModel(filepath = "./static/datasets/dataset.csv"):
+def generatePredictionModel(filepath = "./static/datasets/dataset.csv", algorithm="linear"):
     global df
     df = pd.read_csv(cleanFile(filepath))
     X = [[x1, x2, x3, x4, x5, x6] for x1, x2, x3, x4, x5, x6 in
@@ -23,15 +27,29 @@ def generatePredictionModel(filepath = "./static/datasets/dataset.csv"):
              df["GNI"], df["Inflation"])]
     y = [[x1, x2] for x1, x2 in zip(df["Realestate index"], df["IT index"])]
     global model
-    model = LinearRegression()
+    model = choose_algorithm(algorithm)
     model.fit(X, y)
     score = model.score(X, y)
     print("Score of the model:", score)
     global model_already_generated
     model_already_generated = True
+    return score
+
+def choose_algorithm(algorithm):
+    if algorithm == "linear":
+        return LinearRegression()
+    elif algorithm == "decision-tree":
+        return DecisionTreeRegressor()
+    elif algorithm == "random-forest":
+        return RandomForestRegressor()
+    elif algorithm == "k-neighbors":
+        return KNeighborsRegressor()
+    else:
+        return LinearRegression()
 
 def cleanFile(filepath):
-    with open(filepath, 'r') as input_file, open('./static/datasets/dataset-process.csv', 'w', newline='') as output_file:
+    clean_file = os.path.dirname(filepath)+"dataset-process.csv"
+    with open(filepath, 'r') as input_file, open(clean_file, 'w', newline='') as output_file:
         lines = input_file.readlines()
         non_blank_lines = [line for line in lines if line.strip()]
         while non_blank_lines and not non_blank_lines[-1].strip():
@@ -39,10 +57,11 @@ def cleanFile(filepath):
         if non_blank_lines:
             non_blank_lines[-1] = non_blank_lines[-1].rstrip('\n')
         output_file.write(''.join(non_blank_lines))
-    return "./static/datasets/dataset-process.csv"
+    return clean_file
 
-def regenerateModel():
-    generatePredictionModel("./static/datasets/dataset-temp.csv")
+def regenerateModel(path, algorithm):
+    score = generatePredictionModel(path, algorithm)
+    return score
 
 def predictTheValue(population, goldPrice, oilPrice, S_Pindex, GNI, Inflation):
     if not (model_already_generated):
@@ -143,7 +162,12 @@ def getYearVersusHeatGraph(param, url_prefix="."):
     return filename
 
 def getCurrentDataTable():
-    return df
+    print(df)
+    if df is None:
+        generatePredictionModel()
+        return df
+    else:
+        return df
 
 def getOriginalDataTable():
     with open('./static/datasets/dataset.csv', 'r') as input_file, open('./static/datasets/dataset-temp.csv', 'w', newline='') as output_file:
@@ -157,6 +181,6 @@ def getOriginalDataTable():
     return pd.read_csv("./static/datasets/dataset-temp.csv")
 
 if __name__ == '__main__':
-    generatePredictionModel()
+    generatePredictionModel(filepath = "../static/datasets/dataset.csv", algorithm="random-forest")
     # getYearVersusGraph('Inflation',"..")
     # predictTheValue(335.8,2026.18,71,4685.05,27562.786,3.4)

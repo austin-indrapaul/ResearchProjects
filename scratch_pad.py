@@ -33,27 +33,36 @@ def test_eval_function_condition():
 #         stream=True,
 #         headers=headers
 #     )
+#
+# import requests
+#
+# def my_custom_function():
+#     url = "https://api.worldnewsapi.com/search-news?text=population&language=en"
+#     api_key = "860da77fdb19487abff1da00f21ccfaf"
+#
+#     headers = {
+#         'x-api-key': api_key
+#     }
+#
+#     response = requests.get(url, headers=headers)
+#
+#     if response.status_code == 200:
+#         return response.json()
+#     else:
+#         return f"Error: {response.status_code}"
+#
+# if __name__ == "__main__":
+#     print(my_custom_function()['news'][0]['title'])
 
 import requests
 
-def my_custom_function():
-    url = "https://api.worldnewsapi.com/search-news?text=population&language=en"
-    api_key = "860da77fdb19487abff1da00f21ccfaf"
-
-    headers = {
-        'x-api-key': api_key
-    }
-
-    response = requests.get(url, headers=headers)
-
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return f"Error: {response.status_code}"
-
 if __name__ == "__main__":
-    print(my_custom_function()['news'][0]['title'])
+    api_url = "https://api.obviously.ai/v1/predict"
+    csv_data = open("../static/datasets/dataset.csv", "rb").read()
+    response = requests.post(api_url, data=csv_data)
 
+    prediction_results = response.json()
+    print(prediction_results)
 
     # response = Completion.create(
     #     engine="text-davinci-003",

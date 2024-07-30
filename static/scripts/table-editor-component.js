@@ -70,6 +70,46 @@ function populateTheData(jsonData) {
     let space1 = document.createElement('span');
     space1.innerHTML = " &nbsp; "
     header.appendChild(space1);
+    
+    let select = document.createElement("select");
+    select.classList.add("btn","btn-secondary");
+    select.setAttribute("id","selected-algorthim");
+    select.setAttribute("data-selected","linear");
+
+    // Add options to the select element
+    let option1 = document.createElement("option");
+    option1.text = "Linear Regression";
+    option1.value = "linear";
+    select.appendChild(option1);
+    
+    let option2 = document.createElement("option");
+    option2.text = "Decision Tree Regressor";
+    option2.value= "decision-tree";
+    select.appendChild(option2);
+
+    let option3 = document.createElement("option");
+    option3.text = "Random Forest Regressor";
+    option3.value = "random-forest";
+    select.appendChild(option3);
+
+    let option5 = document.createElement("option");
+    option5.text = "K Neighbors Regressor";
+    option5.value = "k-neighbors";
+    select.appendChild(option5);
+
+
+    select.addEventListener("change", function() {
+        let select_tag = document.getElementById("selected-algorthim");
+        let selectedOption = select_tag.options[select_tag.selectedIndex];
+        let selectedValue = selectedOption.value;
+        let selectedCustom = select_tag.getAttribute("data-selected");
+        select_tag.setAttribute("data-selected", selectedValue);
+    });
+    header.appendChild(select);
+    let space_select = document.createElement('span');
+    space_select.innerHTML = " &nbsp; "
+    header.appendChild(space_select);
+    
     let span2 = document.createElement('span');
     span2.innerHTML =
       "<button type=\"button\" class=\"btn btn-success\" onclick=\"save_regenerate(event);\">Save & Regenerate model <i class=\"bi bi-arrow-clockwise\"></i></button>";
@@ -96,8 +136,9 @@ function deleteRecord(event){
 }
 
 function save_regenerate(event){
+    let selected_algorithm = document.getElementById("selected-algorthim").getAttribute("data-selected");
     return new Promise((resolve, reject) => {
-        fetch('/save-regenerate', {
+        fetch('/save-regenerate/'+selected_algorithm, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -107,10 +148,11 @@ function save_regenerate(event){
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
-          } else{
-            console.log("Data saved successfully.")
-            document.getElementById("modalTableEditor-body").innerHTML= "<p class=\"alert alert-success\" role=\"alert\">Data saved successfully and model is regenerated.</p>";
           }
+          return response.json()
+        }).then(data => {
+            console.log("Data saved successfully. Model score: "+data)
+            document.getElementById("modalTableEditor-body").innerHTML= "<p class=\"alert alert-success\" role=\"alert\">Data saved successfully and model is regenerated. Model score is "+data+"</p>";
         })
         .catch(error => {
             console.error('Error:', error);
