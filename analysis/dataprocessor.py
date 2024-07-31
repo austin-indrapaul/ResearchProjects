@@ -12,7 +12,10 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
 global df
-df = None
+df = pd.read_csv("./static/datasets/dataset.csv")
+global chart_df
+chart_df = pd.read_csv("./static/datasets/dataset.csv")
+chart_df["Date"] = pd.to_datetime(chart_df["Date"], format='%m/%d/%Y')
 
 global model_already_generated
 model_already_generated = False
@@ -33,6 +36,9 @@ def generatePredictionModel(filepath = "./static/datasets/dataset.csv", algorith
     print("Score of the model:", score)
     global model_already_generated
     model_already_generated = True
+    global chart_df
+    chart_df = df.copy()
+    chart_df["Date"] = pd.to_datetime(chart_df["Date"], format='%m/%d/%Y')
     return score
 
 def choose_algorithm(algorithm):
@@ -118,9 +124,8 @@ def getYearVersusGraph(param, url_prefix="."):
 def getYearVersusLineGraph(param, url_prefix="."):
     plt.rcdefaults()
     plt.clf()
-    df["Date"] = pd.to_datetime(df["Date"], format='%m/%d/%Y')
     fig, ax = plt.subplots(figsize=(10, 6))
-    sns.lineplot(x=df["Date"], y=df[param], color=random_color(), ax=ax)
+    sns.lineplot(x=chart_df["Date"], y=chart_df[param], color=random_color(), ax=ax)
     plt.subplots_adjust(left=0.15, right=0.9, bottom=0.15, top=0.85)
     plt.title("Line Graph of "+param)
     filename = url_prefix + "/static/results/graphs/line-" + param + ".jpg"
@@ -130,9 +135,8 @@ def getYearVersusLineGraph(param, url_prefix="."):
 def getYearVersusBarGraph(param, url_prefix="."):
     plt.rcdefaults()
     plt.clf()
-    df["Date"] = pd.to_datetime(df["Date"], format='%m/%d/%Y')
     fig, ax = plt.subplots(figsize=(10, 6))
-    sns.barplot(x=df["Date"], y=df[param], data=df, color=random_color(), ax=ax)
+    sns.barplot(x=chart_df["Date"], y=chart_df[param], data=chart_df, color=random_color(), ax=ax)
 
     # Skip every n-th tick label
     n = 5  # Adjust the value of n as needed
@@ -142,7 +146,7 @@ def getYearVersusBarGraph(param, url_prefix="."):
             label.set_visible(False)
 
     ax.set_xticks(ax.get_xticks()[::n])
-    ax.set_xticklabels(df["Date"].dt.year[::n].astype(str), rotation=90, ha='right')
+    ax.set_xticklabels(chart_df["Date"].dt.year[::n].astype(str), rotation=90, ha='right')
 
     plt.subplots_adjust(left=0.15, right=0.9, bottom=0.15, top=0.85)
     plt.title("Bar Graph of "+param)
@@ -153,7 +157,7 @@ def getYearVersusBarGraph(param, url_prefix="."):
 def getYearVersusHeatGraph(param, url_prefix="."):
     plt.rcdefaults()
     plt.clf()
-    data_without_timestamp = df.drop(columns=['Date'])
+    data_without_timestamp = chart_df.drop(columns=['Date'])
     sns.heatmap(data=data_without_timestamp.corr())
     plt.subplots_adjust(left=0.2, right=0.92, bottom=0.25, top=0.9)
     plt.title("Heat Map")
@@ -162,7 +166,6 @@ def getYearVersusHeatGraph(param, url_prefix="."):
     return filename
 
 def getCurrentDataTable():
-    print(df)
     if df is None:
         generatePredictionModel()
         return df
