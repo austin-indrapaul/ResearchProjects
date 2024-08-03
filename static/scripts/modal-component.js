@@ -33,9 +33,16 @@ function loadTheDataInModal(category){
                   console.log(key + ": " + data[key]);
                 }
                 results = data;
-                document.getElementById("modal-body").innerHTML= data["news"]
-                console.log("resultset: "+results);
-                resolve(results)
+                if(data["text"].length > 0){
+                    document.getElementById("modal-body").innerHTML=
+                    "<h6>"+data["title"]+" - <i>"+data["author"]+" ("+data["publish_date"]+")"+"</i></h6>"+
+                    "<p>"+data["text"]+"</p>"
+                    console.log("resultset: "+results);
+                    resolve(results)
+                } else {
+                    document.getElementById("modal-body").innerHTML=
+                        "<h6>No news to fetch or network error</h6";
+                }
               })
               .catch(error => {
                 reject(error)
@@ -53,13 +60,14 @@ function getNewsResults(type){
     fetch('/fetch-news?type=' + type)
     .then(response => {
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        console.error('Network response was not ok / unable to fetch news');
+        return {"text":""}
       }
       return response.json();
     })
     .then(data => {
         console.log("Data received: "+data)
-        results["news"]=data;
+        results=data;
         resolve(results)
         return results
     })

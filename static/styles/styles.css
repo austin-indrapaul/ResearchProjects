@@ -182,3 +182,6 @@ p.result{
 #modalTableEditor .modal-header{
     justify-content: space-between!important;
 }
+#modal-body > h6{
+    font-weight: bolder;
+}
