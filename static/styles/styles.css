@@ -185,3 +185,7 @@ p.result{
 #modal-body > h6{
     font-weight: bolder;
 }
+#myMeter {
+  border-radius: 20px;
+  border: 1px solid black;
+}

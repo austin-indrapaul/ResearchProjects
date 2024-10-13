@@ -32,6 +32,8 @@ def rephrase_type(type):
         return "human population related news"
     elif type == "IT-INDEX":
         return "NASDAQ100 OR IT sector OR Silicon valley"
+    elif type == "s_p - index":
+        return "economy OR stocks OR S and P 500 OR Dow jones OR stock market OR INDEXSP OR Standard and Poor's 500 OR NYSE"
     else:
         return type
 

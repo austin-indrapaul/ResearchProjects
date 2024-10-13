@@ -1,3 +1,6 @@
+
+
+
 def test_eval_function_forumla():
     value = 16.6667
     formula = input("Enter a formula (use 'input' for current value to be substituted):\n")
@@ -55,14 +58,84 @@ def test_eval_function_condition():
 #     print(my_custom_function()['news'][0]['title'])
 
 import requests
+import pandas as pd
+import numpy as np
+import matplotlib
+import random
+import os
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+import seaborn as sns
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.tree import DecisionTreeRegressor
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+import tensorflow as tf
+keras = tf.keras
+layers = tf.keras.layers
+
+
+def flexible_attribute(filepath = "../static/datasets/dataset.csv", algorithm="linear"):
+    print(tf.__version__)
+    global df
+    df = pd.read_csv("./static/datasets/dataset.csv")
+    # Features and target variables
+    X = df[["population","Gold price","Oil price","S&P index", "GNI", "Inflation"]].values
+    y = df[['Realestate index', 'IT index']].values;
+
+    # Define the model
+    input_layer = layers.Input(shape=(6,))
+    weights = layers.Dense(6, activation='linear', use_bias=False)(input_layer)  # Flexible weights
+    weighted_input = layers.multiply([input_layer, weights])  # Element-wise multiplication
+
+    # Neural network layers
+    hidden_layer = layers.Dense(64, activation='relu')(weighted_input)
+    output_layer = layers.Dense(2)(hidden_layer)  # Output for S&P and NASDAQ indices
+
+    model = keras.Model(inputs=input_layer, outputs=output_layer)
+
+    # Compile the model
+    model.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
+
+    # Train the model
+    model.fit(X, y, epochs=10, validation_split=0.2)
+
+    # Example of accessing and adjusting weights after training
+    weights_value = model.layers[1].get_weights()[0]  # Get weights from the first Dense layer
+    print("Initial Weights:", weights_value)
+
+    # Adjust weights manually if needed
+    # For example, you can multiply the weights by a factor
+    adjusted_weights = weights_value * np.array([[1.0], [1.0], [1.0], [1.0], [1.0], [1.0]])  # Adjust weights for each feature
+    model.layers[1].set_weights([adjusted_weights])  # Set the adjusted weights back
+
+    # Re-evaluate the model if necessary
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    loss, accuracy = model.evaluate(X_test, y_test)
+    print("Accuracy:", accuracy)
+    # Your input data as a list
+    new_X = [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+
+    # Convert the list to a NumPy array
+    new_X_array = np.array(new_X)
+
+    # Make predictions using the model
+    predictions = model.predict(new_X_array)
+    print(predictions)
 
 if __name__ == "__main__":
-    api_url = "https://api.obviously.ai/v1/predict"
-    csv_data = open("../static/datasets/dataset.csv", "rb").read()
-    response = requests.post(api_url, data=csv_data)
+    flexible_attribute()
 
-    prediction_results = response.json()
-    print(prediction_results)
+
+    # api_url = "https://api.obviously.ai/v1/predict"
+    # csv_data = open("../static/datasets/dataset.csv", "rb").read()
+    # response = requests.post(api_url, data=csv_data)
+    #
+    # prediction_results = response.json()
+    # print(prediction_results)
+
 
     # response = Completion.create(
     #     engine="text-davinci-003",
@@ -92,50 +165,3 @@ if __name__ == "__main__":
 # input<0, input=NULL
 
 # receive file output path
-
-
-def getYearVersusUrbanPopGraph(url_prefix="."):
-    plt.rcdefaults()
-    plt.clf()
-    plt.xticks(df["Year"], rotation=90, fontsize=5)
-    plt.yticks(fontsize=5)
-    plt.gca().xaxis.set_tick_params()
-    plt.gca().yaxis.set_tick_params()
-    plt.bar(df["Year"], df["UrbanPopulation"], 0.2, color="blue")
-    plt.plot(df["Year"], df["UrbanPopulation"], color="black")
-    plt.tight_layout()
-    filename = url_prefix + "/static/results/graphs/urbanPopGraph.jpg";
-    plt.savefig(filename, dpi=500)
-    return filename
-
-
-def getYearVersusRuralPopGraph(url_prefix="."):
-    plt.rcdefaults()
-    plt.clf()
-    plt.xticks(df["Year"], rotation=90, fontsize=5)
-    plt.yticks(fontsize=5)
-    plt.gca().xaxis.set_tick_params()
-    plt.gca().yaxis.set_tick_params()
-    plt.bar(df["Year"], df["RuralPopulation"], 0.2, color="orange")
-    plt.plot(df["Year"], df["RuralPopulation"], color="black")
-    plt.tight_layout()
-    filename = url_prefix + "/static/results/graphs/ruralPopGraph.jpg";
-    plt.savefig(filename, dpi=500)
-    return filename
-
-
-def getYearVersusUrbanAndRuralPopGraph(url_prefix="."):
-    plt.rcdefaults()
-    plt.clf()
-    plt.xticks(df["Year"], rotation=90, fontsize=5)
-    plt.yticks(fontsize=5)
-    plt.gca().xaxis.set_tick_params()
-    plt.gca().yaxis.set_tick_params()
-    plt.bar(df["Year"] - 0.2, df["UrbanPopulation"], 0.2, color="blue")
-    plt.bar(df["Year"] + 0.2, df["RuralPopulation"], 0.2, color="orange")
-    plt.plot(df["Year"], df["RuralPopulation"], color="black")
-    plt.plot(df["Year"], df["UrbanPopulation"], color="black")
-    plt.tight_layout()
-    filename = url_prefix + "/static/results/graphs/urbanRuralPopGraph.jpg";
-    plt.savefig(filename, dpi=500)
-    return filename

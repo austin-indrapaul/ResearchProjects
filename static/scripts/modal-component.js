@@ -36,8 +36,21 @@ function loadTheDataInModal(category){
                 if(data["text"].length > 0){
                     document.getElementById("modal-body").innerHTML=
                     "<h6>"+data["title"]+" - <i>"+data["author"]+" ("+data["publish_date"]+")"+"</i></h6>"+
-                    "<p>"+data["text"]+"</p>"
+                    "<p>"+data["text"]+"</p>";
+
+                    document.getElementById("modal-title").innerHTML +=
+                    ' : <meter id="myMeter" value="'+data["sentiment_level"]+'" min="-1" max="1" low="-0.25" high="0.25" optimum="1">'+data["sentiment_level"]+'</meter>';
+                      const meter = document.getElementById("myMeter");
+                      const value = data["sentiment_level"];
+                      if (value > 0.5) {
+                        meter.style.backgroundColor = "green";
+                      } else if (value < -0.5) {
+                        meter.style.backgroundColor = "red";
+                      } else {
+                        meter.style.backgroundColor = "yellow";
+                      }
                     console.log("resultset: "+results);
+                    document.getElementById("modal-title").innerHTML
                     resolve(results)
                 } else {
                     document.getElementById("modal-body").innerHTML=
