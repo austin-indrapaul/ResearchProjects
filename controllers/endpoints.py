@@ -1,3 +1,4 @@
+import ast
 import time
 
 from flask import Blueprint, jsonify, request
@@ -69,8 +70,16 @@ def fetchDataTable(param):
     #time.sleep(2)
     return json_result
 
-@function.route('/save-regenerate/<algorithm>', methods=['POST'])
-def save_and_regenerate(algorithm):
+@function.route('/save-regenerate/<algorithm>/', methods=['POST'])
+@function.route('/save-regenerate/<algorithm>/<epoch>/<custom_weightage>/', methods=['POST'])
+def save_and_regenerate(algorithm, epoch=None, custom_weightage=None):
     data = request.get_json()
-    model_score = dataanalyzer.save_and_regenerate(data, algorithm)
+    if algorithm == "weightage":
+        epoch = int(epoch)
+        float_list = ast.literal_eval(custom_weightage)
+        float_list = [float(x) for x in float_list]
+        print(float_list)
+        model_score = regenerateModel("./static/datasets/dataset-temp.csv",algorithm, epoch, float_list)
+    else:
+        model_score = dataanalyzer.save_and_regenerate(data, algorithm)
     return jsonify(model_score)

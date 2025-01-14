@@ -102,8 +102,11 @@ def getDataTable(param):
     elif param == "original":
         return getOriginalDataTable()
 
-def save_and_regenerate(data, algorithm):
+def save_and_regenerate(data, algorithm, epoch = 15, custom_weightage = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]):
     with open("./static/datasets/dataset-temp.csv", "w") as file:
         file.write(data)
-    score = regenerateModel("./static/datasets/dataset-temp.csv",algorithm)
+    if algorithm == "weightage":
+        score = regenerateModel("./static/datasets/dataset-temp.csv",algorithm, epoch, custom_weightage)
+    else:
+        score = regenerateModel("./static/datasets/dataset-temp.csv",algorithm)
     return score

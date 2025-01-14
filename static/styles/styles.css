@@ -189,3 +189,16 @@ p.result{
   border-radius: 20px;
   border: 1px solid black;
 }
+
+#weightage-form {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#weightage-form label{
+  width: 270px;
+}

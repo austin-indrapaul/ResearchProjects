@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 
 # change this value when running as standalone module
 global actual_file
-actual_file = "../static/datasets/dataset.csv"
+actual_file = "./static/datasets/dataset.csv"
 
 global df
 df = pd.read_csv(actual_file)
@@ -31,9 +31,11 @@ chart_df["Date"] = pd.to_datetime(chart_df["Date"], format='%m/%d/%Y')
 global model_already_generated
 model_already_generated = False
 
+standard_weights = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+standard_epoch = 10
 
 # Date,population,Gold price,Oil price,S&P index,GNI,Inflation,Realestate index,IT index
-def generatePredictionModel(filepath = "./static/datasets/dataset.csv", algorithm="linear"):
+def generatePredictionModel(filepath = "./static/datasets/dataset.csv", algorithm="linear", epoch=standard_epoch, custom_weights=standard_weights):
     global df
     df = pd.read_csv(cleanFile(filepath))
     X = [[x1, x2, x3, x4, x5, x6] for x1, x2, x3, x4, x5, x6 in
@@ -42,7 +44,7 @@ def generatePredictionModel(filepath = "./static/datasets/dataset.csv", algorith
     y = [[x1, x2] for x1, x2 in zip(df["Realestate index"], df["IT index"])]
     global model
     if algorithm == "weightage":
-        model, score = weightage()
+        model, score = weightage(epoch, custom_weights)
     else:
         model = choose_algorithm(algorithm)
         model.fit(X, y)
@@ -67,7 +69,7 @@ def choose_algorithm(algorithm):
     else:
         return LinearRegression()
 
-def weightage():
+def weightage(epoch = standard_epoch, custom_weights = standard_weights):
     print(tf.__version__)
     # Features and target variables
     X = df[["population","Gold price","Oil price","S&P index", "GNI", "Inflation"]].values
@@ -88,7 +90,7 @@ def weightage():
     model.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
 
     # Train the model
-    model.fit(X, y, epochs=10, validation_split=0.2)
+    model.fit(X, y, epochs=epoch, validation_split=0.2)
 
     # Example of accessing and adjusting weights after training
     weights_value = model.layers[1].get_weights()[0]  # Get weights from the first Dense layer
@@ -96,7 +98,7 @@ def weightage():
 
     # Adjust weights manually if needed
     # For example, you can multiply the weights by a factor
-    adjusted_weights = weights_value * np.array([[1.0], [1.0], [1.0], [1.0], [1.0], [1.0]])  # Adjust weights for each feature
+    adjusted_weights = weights_value * np.array([custom_weights])  # Adjust weights for each feature
     model.layers[1].set_weights([adjusted_weights])  # Set the adjusted weights back
 
     # Re-evaluate the model if necessary
@@ -127,8 +129,8 @@ def cleanFile(filepath):
         output_file.write(''.join(non_blank_lines))
     return clean_file
 
-def regenerateModel(path, algorithm):
-    score = generatePredictionModel(path, algorithm)
+def regenerateModel(path, algorithm,epoch=standard_epoch, custom_weights=standard_weights):
+    score = generatePredictionModel(path, algorithm,epoch, custom_weights)
     return score
 
 def predictTheValue(population, goldPrice, oilPrice, S_Pindex, GNI, Inflation):
@@ -253,7 +255,7 @@ def main():
     # global df
     # df = pd.read_csv("../static/datasets/dataset.csv")
     # print(df)
-    generatePredictionModel(filepath="../static/datasets/dataset.csv", algorithm="weightage")
+    generatePredictionModel(filepath="../static/datasets/dataset.csv", algorithm="linear")
     print(predictTheValue(0.0, 0.0, 0.0, 0.0, 0.0, 0.0))
 
     # Convert the list to a NumPy array
